@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>記事テンプレート | ろくふぁめ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🖋%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #000;
+  --panel: #141414;
+  --line: #2a2a2a;
+  --text: #ececec;
+  --muted: #9a9a9a;
+  --accent: #8fd6ea;
+  --header-h: 56px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Noto Sans JP", Meiryo, sans-serif;
+  line-height: 1.8;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; z-index: 20;
+  height: env(safe-area-inset-top, 0px); background: var(--bg);
+}
+
+/* ---- header ---- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.bar {
+  max-width: 1080px; margin: 0 auto; padding: 0 20px;
+  height: var(--header-h); display: flex; align-items: center; justify-content: space-between;
+}
+.site-name {
+  color: var(--text); text-decoration: none;
+  font-size: 1.15rem; font-weight: 700; letter-spacing: .02em;
+}
+.nav { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.nav > li { position: relative; }
+.nav a, .nav button {
+  display: block; padding: 8px 12px; border-radius: 6px;
+  font: inherit; font-size: .95rem; color: var(--muted);
+  background: var(--bg); border: 0; cursor: pointer; text-decoration: none;
+}
+.nav a:hover, .nav button:hover, .nav button[aria-expanded="true"] { color: var(--text); }
+.nav a:focus-visible, .nav button:focus-visible, .site-name:focus-visible, .menu-toggle:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.nav button::after {
+  content: ""; display: inline-block; margin-left: 8px; vertical-align: 2px;
+  width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg); transition: transform .15s;
+}
+.nav button[aria-expanded="true"]::after { transform: rotate(225deg); vertical-align: -1px; }
+.has-drop { display: flex; align-items: center; }
+.has-drop > a { padding-right: 4px; }
+.nav .drop-toggle { padding: 8px 10px 8px 2px; }
+.nav .drop-toggle::after { margin-left: 0; }
+.nav .settings::after { content: none; }
+
+.dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; min-width: 190px;
+  margin: 0; padding: 6px; list-style: none;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  display: none;
+}
+.dropdown.right { left: auto; right: 0; }
+.has-drop.open > .dropdown { display: block; }
+.dropdown a { color: var(--text); background: transparent; }
+.dropdown a:hover { background: #222; }
+.nav .settings {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0; margin-left: 8px;
+  color: var(--muted); border: 1px solid var(--line);
+}
+.nav .settings svg { width: 18px; height: 18px; }
+.nav .settings:hover { color: var(--text); }
+.nav .settings:hover { border-color: var(--accent); }
+
+.menu-toggle { display: none; }
+
+/* ---- hero ---- */
+.hero { position: relative; height: 160svh; overflow: hidden; }
+.group { position: absolute; display: flex; gap: 1.4rem; }
+.g1 { top: 14svh; left: 5vw; align-items: flex-end; }
+.g2 { top: 56svh; right: 5vw; flex-direction: column; align-items: flex-end; gap: .6rem; }
+.g3 { top: 100svh; left: 5vw; align-items: flex-end; }
+.msg {
+  margin: 0; padding: .1em; max-width: 14em;
+  font-size: clamp(2.1rem, 7.2vw, 6.4rem);
+  font-weight: 800; line-height: 1.3; letter-spacing: .03em; color: #fff;
+}
+.g2 .msg { text-align: right; padding-right: 0; margin-right: -.03em; }
+.sub { margin: 0; max-width: 16em; font-size: .85rem; line-height: 1.8; color: var(--muted); }
+.g2 .sub { text-align: right; }
+.js .sub { opacity: 0; transition: opacity .9s ease; }
+.js .msg.in ~ .sub { opacity: 1; }
+.js .g1 .sub { transition-delay: 1.3s; }
+.js .g2 .sub { transition-delay: 2.3s; }
+.js .g3 .sub { transition-delay: 1s; }
+@media (max-width: 760px) {
+  .g1, .g3 { flex-direction: column; align-items: flex-start; gap: .4rem; }
+}
+.note { position: absolute; top: 20px; left: 0; right: 0; text-align: center; margin: 0; font-size: .8rem; color: var(--muted); }
+.js .msg { clip-path: inset(0 100% 0 0); transition: clip-path 1.2s cubic-bezier(.2, .8, .2, 1); }
+.js .msg.m1 { transition-delay: .3s; }
+.js .msg.m2 { clip-path: inset(0 0 0 100%); transition-delay: 1.2s; }
+.js .msg.in { clip-path: inset(0 0 0 0); }
+@media (prefers-reduced-motion: reduce) { .js .msg, .js .sub { transition: none; } }
+
+/* ---- mobile ---- */
+@media (max-width: 760px) {
+  .menu-toggle {
+    display: block; background: var(--bg); border: 1px solid var(--line); color: var(--text);
+    padding: 6px 12px; border-radius: 6px; font: inherit; font-size: .9rem; cursor: pointer;
+  }
+  .nav {
+    display: none; position: absolute; left: 0; right: 0; top: var(--header-h);
+    flex-direction: column; align-items: stretch; gap: 0; padding: 8px 20px 16px;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .site-header.menu-open .nav { display: flex; }
+  .nav > li { width: 100%; }
+  .nav a, .nav button { width: 100%; text-align: left; padding: 12px 8px; }
+  .has-drop { flex-wrap: wrap; }
+  .has-drop > a { flex: 1; width: auto; padding-right: 8px; }
+  .nav .drop-toggle { width: 48px; padding: 12px 0; text-align: center; }
+  .has-drop > .dropdown { width: 100%; }
+  .dropdown, .dropdown.right { position: static; border: 0; padding: 0 0 0 12px; background: none; }
+  .nav .settings { margin: 8px 0 0; width: 100%; }
+}
+
+
+/* ================= knowledge (共通) ================= */
+.nav a[aria-current="page"] { color: var(--text); }
+.kn { max-width: 1080px; margin: 0 auto; padding: 64px 20px 160px; }
+.kn-title {
+  margin: 0 0 16px; color: #fff; font-weight: 800; line-height: 1;
+  font-size: clamp(3rem, 10vw, 6.5rem); letter-spacing: .02em;
+}
+.kn-lead { margin: 0 0 48px; max-width: 30em; color: var(--muted); }
+.tag {
+  display: inline-block; padding: 1px 8px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: .75rem; color: var(--muted); white-space: nowrap;
+}
+
+/* ---- 記事 ---- */
+.crumbs { margin: 0 0 32px; font-size: .85rem; color: var(--muted); }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--accent); }
+.crumbs span { margin: 0 8px; }
+.art-head { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.art-head h1 { margin: 0 0 16px; font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1.3; color: #fff; }
+.art-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: .85rem; color: var(--muted); }
+.art-meta time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.art-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.art-layout { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 56px; align-items: start; }
+.toc { position: sticky; top: calc(var(--header-h) + 32px); font-size: .85rem; }
+.toc p { margin: 0 0 8px; font-weight: 700; color: var(--muted); letter-spacing: .05em; }
+.toc ol { margin: 0; padding: 0; list-style: none; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 4px 0 4px 14px; margin-left: -1px; border-left: 1px solid transparent; color: var(--muted); text-decoration: none; line-height: 1.5; }
+.toc .lv3 a { padding-left: 28px; }
+.toc a:hover { color: var(--text); }
+.toc a.active { color: var(--accent); border-left-color: var(--accent); }
+@media (max-width: 960px) {
+  .art-layout { grid-template-columns: 1fr; gap: 0; }
+  .toc { position: static; order: -1; margin-bottom: 40px; padding: 16px 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+}
+
+.body { max-width: 46em; }
+.body h2 { margin: 64px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 1.5rem; color: #fff; scroll-margin-top: calc(var(--header-h) + 24px); }
+.body h3 { margin: 40px 0 12px; font-size: 1.15rem; color: #fff; scroll-margin-top: calc(var(--header-h) + 24px); }
+.body > :first-child { margin-top: 0; }
+.body p, .body ul, .body ol { margin: 0 0 1.2em; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body a { color: var(--accent); }
+.body code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; padding: .1em .35em; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+.body pre { margin: 0 0 1.4em; padding: 16px 18px; overflow-x: auto; line-height: 1.6; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.body pre code { padding: 0; background: none; border: 0; font-size: .88rem; }
+.body blockquote { margin: 0 0 1.2em; padding: 4px 0 4px 16px; border-left: 3px solid var(--line); color: var(--muted); }
+.body img { max-width: 100%; height: auto; border-radius: 8px; }
+.body table { width: 100%; margin: 0 0 1.4em; border-collapse: collapse; font-size: .92rem; display: block; overflow-x: auto; }
+.body th, .body td { padding: 8px 12px; border: 1px solid var(--line); text-align: left; }
+.body th { background: var(--panel); }
+.callout { margin: 0 0 1.4em; padding: 14px 18px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 6px; background: var(--panel); }
+.callout > :last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="bar">
+    <a class="site-name" href="../index.html">ろくふぁめ</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mainNav">メニュー</button>
+    <ul class="nav" id="mainNav">
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../notes/index.html">Notes</a></li>
+      <li><a href="../knowledge/index.html" aria-current="page">Knowledge</a></li>
+      <li><a href="../projects.html">Projects</a></li>
+      <li class="has-drop">
+        <a href="../link.html">Link</a>
+        <button type="button" class="drop-toggle" aria-label="Linkのメニューを開く" aria-expanded="false" aria-haspopup="true"></button>
+        <ul class="dropdown right">
+          <li><a href="https://github.com/rokufame" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a></li>
+        </ul>
+      </li>
+      <li>
+        <button type="button" class="settings" aria-label="サイト設定" title="サイト設定">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!--
+  新しい記事の作り方:
+  1. このファイルをコピーして knowledge/英数字のファイル名.html にする
+  2. <title>・パンくず・<h1>・日付・タグ・本文を書き換える
+  3. knowledge/index.html の該当カテゴリに <li> を追加する
+  目次は本文の h2 / h3 から自動で作られる（id も自動で付く）
+-->
+<main class="kn">
+  <nav class="crumbs" aria-label="パンくず">
+    <a href="index.html">Knowledge</a><span>/</span><a href="index.html#web">Web</a>
+  </nav>
+
+  <header class="art-head">
+    <h1>記事テンプレート</h1>
+    <div class="art-meta">
+      <span>作成 <time datetime="2026-11-25">2026-11-25</time></span>
+      <span>更新 <time datetime="2026-11-25">2026-11-25</time></span>
+      <span class="art-tags"><span class="tag">HTML</span><span class="tag">テンプレ</span></span>
+    </div>
+  </header>
+
+  <div class="art-layout">
+    <article class="body" id="artBody">
+      <p>この記事は Knowledge の書き方の見本。やったことを、あとで自分が読み返して再現できる粒度で書く。</p>
+
+      <h2>やったこと</h2>
+      <p>何をしたかを最初に一言で書く。<code>インラインコード</code>や<a href="https://github.com/rokufame">リンク</a>も使える。</p>
+
+      <h3>手順</h3>
+      <ol>
+        <li>手順は番号付きリストで書く</li>
+        <li>コマンドはコードブロックにする</li>
+      </ol>
+      <pre><code>$ mkdir knowledge
+$ cp template.html new-article.html</code></pre>
+
+      <h2>分かったこと</h2>
+      <div class="callout">
+        <p>大事なポイントや、詰まったところはこの枠で目立たせる。</p>
+      </div>
+
+      <table>
+        <thead><tr><th>項目</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><td>表</td><td>比較や一覧に使う</td></tr>
+          <tr><td>横に長い表</td><td>スマホでは横スクロールになる</td></tr>
+        </tbody>
+      </table>
+
+      <h2>参考</h2>
+      <ul>
+        <li><a href="https://developer.mozilla.org/ja/">MDN Web Docs</a></li>
+      </ul>
+    </article>
+
+    <nav class="toc" id="toc" aria-label="目次">
+      <p>目次</p>
+      <ol></ol>
+    </nav>
+  </div>
+</main>
+
+
+<script>
+(function () {
+  // 本文の h2 / h3 から目次を作る
+  var body = document.getElementById('artBody');
+  var toc = document.getElementById('toc');
+  var list = toc.querySelector('ol');
+  var heads = body.querySelectorAll('h2, h3');
+  if (!heads.length) { toc.hidden = true; return; }
+
+  var links = [];
+  heads.forEach(function (h, i) {
+    if (!h.id) h.id = 'sec-' + (i + 1);
+    var li = document.createElement('li');
+    li.className = h.tagName === 'H3' ? 'lv3' : 'lv2';
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    list.appendChild(li);
+    links.push(a);
+  });
+
+  // 今読んでいる見出しをハイライト
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id); });
+    });
+  }, { rootMargin: '-64px 0px -70% 0px' });
+  heads.forEach(function (h) { io.observe(h); });
+})();
+</script>
+<script>
+
+(function () {
+  var header = document.getElementById('siteHeader');
+  var toggle = header.querySelector('.menu-toggle');
+  var drops = header.querySelectorAll('.has-drop');
+
+  function closeAll(except) {
+    drops.forEach(function (li) {
+      if (li === except) return;
+      li.classList.remove('open');
+      li.querySelector('button').setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  drops.forEach(function (li) {
+    var btn = li.querySelector('button');
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = !li.classList.contains('open');
+      closeAll(li);
+      li.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+
+  toggle.addEventListener('click', function () {
+    var open = !header.classList.contains('menu-open');
+    header.classList.toggle('menu-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('click', function () { closeAll(null); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
+})();
+</script>
+</body>
+</html>
