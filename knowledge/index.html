@@ -155,39 +155,23 @@ body::before {
   font-size: .75rem; color: var(--muted); white-space: nowrap;
 }
 
-/* ---- 一覧 ---- */
-.kn-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 40px; }
-.kn-search {
-  flex: 1 1 260px; max-width: 420px; padding: 10px 14px; border-radius: 8px;
-  font: inherit; color: var(--text); background: var(--panel); border: 1px solid var(--line);
-}
-.kn-search:focus { outline: none; border-color: var(--accent); }
-.kn-cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.kn-cats button {
-  padding: 6px 14px; border-radius: 999px; font: inherit; font-size: .85rem; cursor: pointer;
-  color: var(--muted); background: transparent; border: 1px solid var(--line);
-}
-.kn-cats button:hover { color: var(--text); }
-.kn-cats button[aria-pressed="true"] { color: #000; background: var(--accent); border-color: var(--accent); }
-.kn-cat { margin-bottom: 56px; }
-.kn-cat h2 {
-  display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px;
-  font-size: 1.5rem; color: #fff;
-}
-.kn-count { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; font-weight: 400; color: var(--muted); }
-.kn-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+/* ---- 一覧（Notesと同じ羅列） ---- */
+.kn-index { max-width: 960px; }
+.kn-index .kn-lead { font-size: clamp(1.1rem, 2.4vw, 1.6rem); line-height: 1.7; color: var(--text); margin-bottom: 72px; }
+.kn-list { list-style: none; margin: 0; padding: 0; }
+.kn-list li { border-top: 1px solid var(--line); }
+.kn-list li:last-child { border-bottom: 1px solid var(--line); }
 .kn-list a {
-  display: flex; flex-direction: column; gap: 6px; height: 100%; padding: 18px 20px;
-  color: var(--text); text-decoration: none;
-  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; transition: border-color .2s;
+  display: grid; grid-template-columns: 140px 1fr auto; gap: 24px; align-items: baseline;
+  padding: 22px 0; color: var(--text); text-decoration: none;
 }
-.kn-list a:hover, .kn-list a:focus-visible { border-color: var(--accent); outline: none; }
-.kn-item-title { font-weight: 700; line-height: 1.5; }
-.kn-item-desc { font-size: .88rem; line-height: 1.7; color: var(--muted); }
-.kn-item-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: auto; padding-top: 6px; }
-.kn-item-meta time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .78rem; color: var(--muted); margin-right: 4px; }
-.kn-empty { color: var(--muted); }
-[hidden] { display: none !important; }
+.kl-date { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; color: var(--muted); }
+.kl-title { font-size: 1.2rem; font-weight: 700; transition: color .2s; }
+.kn-list a:hover .kl-title, .kn-list a:focus-visible .kl-title { color: var(--accent); }
+@media (max-width: 760px) {
+  .kn-list a { grid-template-columns: 1fr auto; gap: 2px 12px; padding: 18px 0; }
+  .kl-date { grid-column: 1 / -1; }
+}
 </style>
 </head>
 <body>
@@ -218,98 +202,23 @@ body::before {
   </div>
 </header>
 
-<main class="kn">
+<main class="kn kn-index">
   <h1 class="kn-title">Knowledge</h1>
   <p class="kn-lead">やったこと・学んだことの整理。手を動かして分かったことを、あとで引ける形で残す。</p>
 
-  <div class="kn-tools">
-    <input class="kn-search" id="knSearch" type="search" placeholder="タイトル・タグで検索" aria-label="Knowledgeを検索">
-    <ul class="kn-cats" id="knCats" aria-label="カテゴリで絞り込み">
-      <li><button type="button" data-cat="all" aria-pressed="true">すべて</button></li>
-      <li><button type="button" data-cat="web" aria-pressed="false">Web</button></li>
-      <li><button type="button" data-cat="low-level" aria-pressed="false">低レイヤ</button></li>
-    </ul>
-  </div>
-
-  <!--
-    記事を追加するとき:
-    1. 記事ファイル（knowledge/○○.html）を作る
-    2. 該当カテゴリの <ul class="kn-list"> に <li> を1つ追加する
-       data-tags にはタグをスペース区切りで書く（検索対象になる）
-    カテゴリを増やすとき:
-    上の kn-cats に <button data-cat="ID"> を足し、下に <section class="kn-cat" data-cat="ID"> を足す
-  -->
-
-  <section class="kn-cat" data-cat="web">
-    <h2>Web <span class="kn-count"></span></h2>
-    <ul class="kn-list">
-      <li data-tags="html css テンプレ">
-        <a href="template.html">
-          <span class="kn-item-title">記事テンプレート</span>
-          <span class="kn-item-desc">Knowledgeの記事の書き方と、使える要素の見本。</span>
-          <span class="kn-item-meta"><time datetime="2026-11-25">2026-11-25</time><span class="tag">HTML</span><span class="tag">テンプレ</span></span>
-        </a>
-      </li>
-    </ul>
-  </section>
-
-  <section class="kn-cat" data-cat="low-level">
-    <h2>低レイヤ <span class="kn-count"></span></h2>
-    <ul class="kn-list">
-    </ul>
-  </section>
-
-  <p class="kn-empty" id="knEmpty" hidden>該当する記事がありません。</p>
+  <!-- 記事を書いたら、ここの一番上に <li> を1つ追加する（右端の tag はカテゴリ） -->
+  <ul class="kn-list">
+    <li>
+      <a href="template.html">
+        <time class="kl-date" datetime="2026-11-25">2026-11-25</time>
+        <span class="kl-title">記事テンプレート</span>
+        <span class="tag">Web</span>
+      </a>
+    </li>
+  </ul>
 </main>
 
 
-<script>
-(function () {
-  var input = document.getElementById('knSearch');
-  var catBtns = document.querySelectorAll('#knCats button');
-  var sections = document.querySelectorAll('.kn-cat');
-  var empty = document.getElementById('knEmpty');
-  var current = 'all';
-
-  // URLの #web などでカテゴリを指定できる
-  if (location.hash) {
-    var h = location.hash.slice(1);
-    if (document.querySelector('#knCats button[data-cat="' + h + '"]')) current = h;
-  }
-
-  function apply() {
-    var q = input.value.trim().toLowerCase();
-    var shown = 0;
-    sections.forEach(function (sec) {
-      var items = sec.querySelectorAll('.kn-list > li');
-      var n = 0;
-      items.forEach(function (li) {
-        var text = (li.textContent + ' ' + (li.dataset.tags || '')).toLowerCase();
-        var ok = !q || text.indexOf(q) !== -1;
-        li.hidden = !ok;
-        if (ok) n++;
-      });
-      sec.querySelector('.kn-count').textContent = n;
-      var catOk = current === 'all' || sec.dataset.cat === current;
-      // 検索中は0件のカテゴリを隠す。検索していないときは空カテゴリも見せる
-      sec.hidden = !catOk || (q && n === 0);
-      if (!sec.hidden) shown += n;
-    });
-    empty.hidden = shown !== 0;
-    catBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.cat === current)); });
-  }
-
-  catBtns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      current = b.dataset.cat;
-      history.replaceState(null, '', current === 'all' ? location.pathname : '#' + current);
-      apply();
-    });
-  });
-  input.addEventListener('input', apply);
-  apply();
-})();
-</script>
 <script>
 
 (function () {
